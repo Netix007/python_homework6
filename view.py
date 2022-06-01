@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.font import *
+from win_win import *
 
 step_x = True
 step = [' ' for i in range(9)]
@@ -29,7 +30,7 @@ def start():
 
 def click_button(i):
     global step_x, step
-    if step[i] == ' ':
+    if step[i] == ' ' and not is_win(step):
         if step_x:
             pole[i].config(text='X')
             step[i] = 'X'
@@ -37,7 +38,8 @@ def click_button(i):
             pole[i].config(text='O')
             step[i] = 'O'
         step_x = not step_x
-        print(step)
+        
+        print(is_win(step))
 
 def game_xo():
     global pole 
