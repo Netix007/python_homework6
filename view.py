@@ -3,18 +3,11 @@ from tkinter.font import *
 from win_win import *
 from random import choice
 
-step_x = True
-step = [' ' for i in range(9)]
-pole = [9]
-variant = 0
-bot_step = [i for i in range(9)]
-
-def cl_start(z):
+def cl_start(z): #настнойка кнопок начального меню
     global variant
     variant = z
-    return variant
     
-def start():
+def start(): #начальное меню
     f_wind = Tk()
     f_wind.title('крестики-нолики 2022')
     fontStyle = Font(family="Lucida Grande", size=30)
@@ -30,8 +23,8 @@ def start():
     f_wind.mainloop()
     return variant
 
-def click_button(i):
-    global step_x, step, bot_step
+def click_button(i, variant): #кнопки игрового поля
+    global pole, step, step_x, bot_step, game
     if step[i] == ' ' and not is_win(step):
         if variant == 1:
             if step_x:
@@ -59,8 +52,13 @@ def click_button(i):
                 else:
                     del bot_step[bot_step.index(i)]
 
-def game_xo():
-    global pole, game 
+def game_xo(variant): #игровое поле
+    global pole, step, step_x, bot_step, game, is_end
+    pole = [9]
+    step = [' ' for j in range(9)]
+    bot_step = [i for i in range(9)]
+    step_x = True
+    is_end = False
     game = Tk()
     fontStyle = Font(family="Lucida Grande", size=80)
     w = game.winfo_screenwidth()
@@ -76,10 +74,11 @@ def game_xo():
         game.rowconfigure(index=i, weight=1)
     pixel = PhotoImage(width=button_size, height=button_size)
     pole = [Button(image=pixel, text=' ', font=fontStyle, compound='c',\
-            command = (lambda z = 3*i + j: click_button(z))) for i in range(3) for j in range(3)]
+            command = (lambda z = 3*i + j: click_button(z, variant))) for i in range(3) for j in range(3)]
     for i in range(9):
         pole[i].grid(column=i%3, row=i//3)
     game.mainloop()
+    return is_end
 
 def result(a):
     result_wind = Toplevel()
@@ -96,9 +95,9 @@ def result(a):
     result_wind.geometry(f'400x200+{x}+{y}')
     lab = Label(result_wind, text=a, font='Arial 14')
     lab.pack()
-    #btn1 = Button(result_wind, text='Сыграть ещё раз', font=fontStyle, command = (lambda: restart_game()))
-    #btn1.pack(padx=20, pady=10)
-    btn2 = Button(result_wind, text='Выйти из игры', font=fontStyle, command = (lambda: game.destroy()))
+    btn1 = Button(result_wind, text='Сыграть ещё раз', font=fontStyle, command = (lambda: restart_game()))
+    btn1.pack(padx=20, pady=10)
+    btn2 = Button(result_wind, text='Выйти из игры', font=fontStyle, command = (lambda: end_game()))
     btn2.pack(padx=20, pady=10)
     result_wind.mainloop()
 
@@ -112,10 +111,11 @@ def who_win(step, step_x):
         result('Ничья')
 
 def restart_game():
-    global step_x, step, pole, variant
-    #game.destroy()
-    step_x = True
-    step = [' ' for i in range(9)]
-    pole = [9]
-    
+    game.destroy()
+
+def end_game():
+    global is_end
+    is_end = True
+    game.destroy()
+
     

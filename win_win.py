@@ -1,5 +1,3 @@
-
-
 def is_win(list_cell):  #проверка на победу
     diag1, diag2 = '', ''
     for i in range(3):
@@ -15,3 +13,5 @@ def is_win(list_cell):  #проверка на победу
     if diag1 in ['XXX', 'OOO'] or diag2 in ['XXX', 'OOO']:
         return True
     return False
+
+
