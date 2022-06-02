@@ -1,11 +1,13 @@
 from tkinter import *
 from tkinter.font import *
 from win_win import *
+from random import choice
 
 step_x = True
 step = [' ' for i in range(9)]
 pole = [9]
 variant = 0
+bot_step = [i for i in range(9)]
 
 def cl_start(z):
     global variant
@@ -29,20 +31,41 @@ def start():
     return variant
 
 def click_button(i):
-    global step_x, step
+    global step_x, step, bot_step
     if step[i] == ' ' and not is_win(step):
         if step_x:
             pole[i].config(text='X')
             step[i] = 'X'
+            if variant == 2:
+                if (is_win(step)):
+                    if step_x:
+                        result('Выиграл Игрок 2')
+                    else:
+                        result('Выиграл Игрок 1')
+                elif ' ' not in step:
+                    result('Ничья')
+                else:
+                    del bot_step[bot_step.index(i)]
+                    i = choice(bot_step)
+                    pole[i].config(text='O')
+                    step[i] = 'O'
+                    del bot_step[bot_step.index(i)]
+                    step_x = not step_x
         else:
-            pole[i].config(text='O')
-            step[i] = 'O'
-        step_x = not step_x
-        
-        print(is_win(step))
+            if variant == 1:
+                pole[i].config(text='O')
+                step[i] = 'O'
+        step_x = not step_x    
+        if (is_win(step)):
+            if step_x:
+                result('Выиграл Игрок 2')
+            else:
+                result('Выиграл Игрок 1')
+        elif ' ' not in step:
+            result('Ничья')
 
 def game_xo():
-    global pole 
+    global pole, game 
     game = Tk()
     fontStyle = Font(family="Lucida Grande", size=80)
     w = game.winfo_screenwidth()
@@ -62,3 +85,31 @@ def game_xo():
     for i in range(9):
         pole[i].grid(column=i%3, row=i//3)
     game.mainloop()
+
+def result(a):
+    result_wind = Toplevel()
+    if variant == 1:
+        players = 'Игрок 1 vs Игрок 2'
+    result_wind.title(f'Результаты игры: {players}')
+    fontStyle = Font(family="Lucida Grande", size=30)
+    w = int(result_wind.winfo_screenwidth()/2)
+    h = int(result_wind.winfo_screenheight()/2)
+    x = int(w - 200)
+    y = int(h - 100)
+    result_wind.geometry(f'400x200+{x}+{y}')
+    lab = Label(result_wind, text=a, font='Arial 14')
+    lab.pack()
+    #btn1 = Button(result_wind, text='Сыграть ещё раз', font=fontStyle, command = (lambda: restart_game()))
+    #btn1.pack(padx=20, pady=10)
+    btn2 = Button(result_wind, text='Выйти из игры', font=fontStyle, command = (lambda: game.destroy()))
+    btn2.pack(padx=20, pady=10)
+    result_wind.mainloop()
+
+def restart_game():
+    global step_x, step, pole, variant
+    game.destroy()
+    step_x = True
+    step = [' ' for i in range(9)]
+    pole = [9]
+    
+    

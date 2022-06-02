@@ -11,9 +11,7 @@ def is_win(list_cell):  #проверка на победу
                 diag1 += list_cell[4*i]
                 diag2 += list_cell[2*i + 2]
         if col in ['XXX', 'OOO'] or row in ['XXX', 'OOO']:
-            print(col, row)
             return True
     if diag1 in ['XXX', 'OOO'] or diag2 in ['XXX', 'OOO']:
-        print(col, row)
         return True
     return False

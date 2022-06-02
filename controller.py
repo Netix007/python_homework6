@@ -1,6 +1,6 @@
 from view import *
 
 def start_game():
+    global variant
     variant = start()
-    print(variant)
     game_xo()
